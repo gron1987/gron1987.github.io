@@ -12,13 +12,13 @@ There are multiple situations when it's needed to work with prediction in "offli
 ## Azure ML IoT general overview
 Before we continue let's take a look at two different types of devices and how they could be connected to the cloud.
 
-<img src="images/Different use-cases.png" />
+<img src="images/Different use-cases.png" style="margin: 0 auto; display:block" />
 
 As we can see usually non-movable IoT devices (for instance, factories) use WiFi or Ethernet to connect to the internet. Other types of devices are movable and for some industries (e.g. automotive, maps development, agriculture) mobile network is the only one available type of the connection for them (e.g. drones, vehicles).
 
 Azure does not differentiate two types of devices (i.e. static and movable) and provides a single approach for them. The diagram below illustrates Azure IoT ML workflow on a high level:
 
-<img src="images/General ML.png" />
+<img src="images/General ML.png" style="margin: 0 auto; display:block" />
 
 The main stages here are:
 
@@ -69,7 +69,7 @@ During each run of that command Azure Python notebooks will store the whole log 
 
 How the docker image creation process looks like (the first command is on bottom)?
 
-<img src="images/Docker layers.png" />
+<img src="images/Docker layers.png" style="margin: 0 auto; display:block" width="600" />
 
 If you want to deep dive what is unicorn, nginx, flask, etc. I recommend you to take a look at Paige Liu's blog post ["Inside the Docker image built by Azure Machine Learning service"](https://liupeirong.github.io/amlDockerImage/).
 
@@ -91,7 +91,7 @@ with open("myenv.yml","w") as f:
 
 Microsoft provides the ability to select which conda packages are required to be installed on the device, which is great. But on which layer they are deploying it in the docker container? As we can see from the layered images above - on layer #11. What is the size of this layer?
 
-<img src="images/conda packages size.png" />
+<img src="images/conda packages size.png" style="margin: 0 auto; display:block" width="700" />
 
 60Mb as an archive (you can find the size of the layer in the meta-information for your container in the Azure Container registry). If you are not familiar with Docker images I should explain it a little bit more here why this is important and why this layer on "top" means we need to transfer it all the time to the edge device.
 
@@ -99,7 +99,7 @@ Microsoft provides the ability to select which conda packages are required to be
 
 Each Docker container contains a base image and then a number of layers (unlimited) with additional files in it. Each layer (including base image layer) has its sha5 hash, which is almost unique. The image below shows how this works (Thank you [cizxs](https://stackoverflow.com/users/1925083/cizixs) for this diagram, since it's not available now on Docker official web page)
 
-<img src="https://media-exp1.licdn.com/dms/image/C4D12AQFKyx9FHmgufg/article-inline_image-shrink_1500_2232/0?e=1596067200&v=beta&t=4MUFBXeaxCdHKKQqjkcf6PpmbqHez1dx37D4NjR4Zto" />
+<img src="https://media-exp1.licdn.com/dms/image/C4D12AQFKyx9FHmgufg/article-inline_image-shrink_1500_2232/0?e=1596067200&v=beta&t=4MUFBXeaxCdHKKQqjkcf6PpmbqHez1dx37D4NjR4Zto" style="margin: 0 auto; display:block" width="600" />
 
 During the "pull" docker checking in the local cache for that sha5 number and if a layer already exists then there's no need to download it from the server. This reduces the size, which we need to transfer between Docker repository and end device. Usually the docker size for python with all DS libraries is ~1Gb, but with this layered approach we need to transfer only a small amount of this information after the first setup (you can find more information on the internet, but I recommend to start from [this Stackoverflow answer](https://stackoverflow.com/questions/31222377/what-are-docker-image-layers/51660942#51660942)).
 
@@ -109,7 +109,7 @@ Each time we run Docker command (RUN / COPY / etc.), we are building a new layer
 
 Without any changes Docker container layers look like that:
 
-<img src="images/Image diff.png" />
+<img src="images/Image diff.png" style="margin: 0 auto; display:block"/>
 
 As you can see we've discovered where our 60Mb came from. But what we could do with that? In theory, there are multiple steps which we could try:
 * Update the Docker file and avoid any dependencies (you could do your base image in theory). Microsoft provides you the instruction on how to do that [https://docs.microsoft.com/en-us/azure/machine-learning/how-to-deploy-custom-docker-image](https://docs.microsoft.com/en-us/azure/machine-learning/how-to-deploy-custom-docker-image).
@@ -153,13 +153,13 @@ You should put this script right after you test your image but before chapter 6 
 
 Below you could find how that impact the layers:
 
-<img src="images/Image diff after optimization.png" />
+<img src="images/Image diff after optimization.png" style="margin: 0 auto; display:block" />
 
 As you can see we've updated just 2 layers (you could do two COPY commands in one to have only 1 layer difference if you want).
 
 The total size for these 2 layers is ~2Kb.
 
-<img src="images/model packages size.png" />
+<img src="images/model packages size.png" style="margin: 0 auto; display:block" width="700" />
 
 We also need to change the deployment part:
 ```
