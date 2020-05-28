@@ -1,0 +1,5 @@
+#theme: jekyll-theme-slate
+#theme: jekyll-theme-modernist
+theme: jekyll-theme-cayman
+title: Optimize Azure ML IoT for production usage (reducing the data transfer cost for uploading the new ML model to the edge devices)
+google_analytics: UA-12761810-2
