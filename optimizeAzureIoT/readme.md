@@ -1,3 +1,5 @@
+# Optimize Azure ML IoT for production usage (reducing the data transfer cost for uploading the new ML model to the edge devices)
+
 ## Introduction
 
 Over the last few years IoT devices and ML/AI have become very popular, and now a lot of companies are moving forward to use them in production. All cloud providers, including Microsoft Azure, provides services how to deploy developed machine learning algorithms to the edge device. The main concern of some industries (automotive, agriculture, etc.) is that in production the cost for data transfer, out of the total cost of ownership, will be huge.
