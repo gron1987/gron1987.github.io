@@ -201,3 +201,5 @@ with open('./deployment.json', 'wt', encoding='utf-8') as output_file:
 
 ## Conclusion
 We've just reduced the size for the Docker image layers, which need to be transferred to the IoT device from 60Mb to 2Kb. Now the update of the model in production will cost you only a few cents.
+
+P.S. I want to participate in [AppliedCloudStoriesContest](https://www.cloudstories.dev/) by Microsoft :)
